@@ -1,0 +1,18 @@
+project: 
+  type: website
+  output-dir: docs
+  
+website: 
+  title: "My Site"
+  navbar: 
+    left: 
+      - text: "About"
+        href: intro.qmd
+      - text: "Projects"
+        href: projectpage.qmd
+      
+format:
+  html: 
+    theme: 
+      - Morph
+      - style.scss
