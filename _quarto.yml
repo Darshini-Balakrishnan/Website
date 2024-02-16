@@ -10,6 +10,8 @@ website:
         href: intro.qmd
       - text: "Projects"
         href: projectpage.qmd
+      - text: :"Certifications"
+        href: certifications.qmd
       
 format:
   html: 
