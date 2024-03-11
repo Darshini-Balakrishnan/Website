@@ -1,0 +1,206 @@
+---
+editor: visual
+format: html
+---
+
+### Group 9
+
+### Redesign Visualization : Map and Bar Graph
+
+<br>
+
+Import required libraries for the redesign. Shiny and Shinydashboard is used for the UI of the visualization, plotly for the interactive graph and tidyverse for the visualization and manipulation purposes.
+
+```{r message=FALSE}
+library(tidyverse)
+library(plotly)
+library(shiny)
+library(shinydashboard)
+```
+
+<br>
+
+The dataset is read and stored in "poverty". Before the visualization the data is cleaned, removed the ", " and replaced the population percentage column data with "." (period) and changed the data type to numeric to represent it as a floating point. Mapdata set and the poverty data is joined to plot a world map.
+
+```{r message=FALSE, results='hide'}
+poverty = read.csv("Poverty.csv")
+
+poverty$X..of.population <- gsub(",", ".", poverty$X..of.population)
+
+mapdata <- map_data("world") %>% as_tibble()
+
+poverty <- poverty %>% rename(region = Country)
+
+mapdata <- left_join(mapdata, poverty, by="region")
+
+mapdata <-mapdata %>% filter(!is.na(mapdata$Population))
+
+str(mapdata)
+
+mapdata$X..of.population <- as.numeric(as.character(mapdata$X..of.population))
+
+```
+
+<br>
+
+Plot the data on the world map and use plotly for making it interactive
+
+```{r message=FALSE}
+map1 <- ggplot(mapdata, aes(x = long, y = lat, group = group, text = paste(region, ": ", Total.number.of.people.living.in.extreme.poverty, "M"))) +
+  geom_polygon(aes(fill = X..of.population), color = "black") +
+  scale_fill_gradient(low = "orange", high = "red", name = "Poverty %") +
+  labs(title = "Poverty Percentage by Region") +
+  theme_minimal()
+
+map1_plotly <- ggplotly(map1, tooltip = "text")
+
+```
+
+<br>
+
+Using shiny UI is developed and connected using the server to display the map according the logic specified. If the graph type is a map then there will be a drop down displayed with the regions and single value selection type input. On the other hand if the graph type is a Bar then the input will a drop down with region names and multiple value input box. For both the graphs the data set is cleaned and filtered according to the input selection and passed to the ggplot for render the graph accordingly.
+
+```{r message=FALSE, results='hide'}
+ui <- dashboardPage(
+  dashboardHeader(title = "Poverty Data by Region", titleWidth = 300),
+  dashboardSidebar(
+    width = 300,
+    conditionalPanel(
+      condition = "input.graphType === 'Map'",
+      selectInput("regionDropdown", "Select Region:", choices = c("World", unique(mapdata$region)))
+    ),
+    selectInput("graphType", "Select Graph Type:", choices = c("Map", "Bar")),
+    conditionalPanel(
+      condition = "input.graphType === 'Bar'",
+      selectizeInput("selectedValues", "Select Country(s):", choices = unique(mapdata$region), multiple = TRUE, selected = unique(mapdata$region)[1])
+    ),
+    actionButton("updateButton", "Update View"),
+    tags$head(tags$style(HTML('
+      .skin-blue .main-sidebar { background-color: #1f4d6e; }
+      .skin-blue .main-header .navbar { background-color: #1f4d6e; }
+      .skin-blue .main-header .logo { background-color: #1f4d6e; }
+    ')))
+  ),
+  dashboardBody(
+    fluidRow(
+      box(plotlyOutput("plotOutput"), width = 12)
+    )
+  )
+)
+
+server <- function(input, output) {
+  selected_country <- reactive({
+    if (length(input$selectedValues) == 0) {
+      unique(mapdata$region)[1]
+    } else {
+      input$selectedValues
+    }
+  })
+  output$plotOutput <- renderPlotly({
+    if (input$regionDropdown == "World") {
+      filteredData <- mapdata
+    } else {
+      filteredData <- mapdata[mapdata$region == input$regionDropdown, ]
+    }
+    
+    if (input$graphType == "Map") {
+      Map <- ggplot(filteredData, aes(x = long, y = lat, group = group, text = paste(region, ": ", Total.number.of.people.living.in.extreme.poverty))) +
+        geom_polygon(aes(fill = X..of.population), color = "black") +
+        scale_fill_gradient(low = "light green", high = "red", name = "Poverty %") +
+        labs(title = paste("Poverty Percentage in", input$regionDropdown)) +
+        theme_minimal() +
+        theme(plot.title = element_text(size = 18, face = "bold", hjust = 0.5)) +
+        coord_fixed(1.3)
+      
+      ggplotly(Map, tooltip = "text")
+    } else if (input$graphType == "Bar") {
+     
+      povertybar <- poverty[poverty$region %in% input$selectedValues, ]
+      povertybar$Total.number.of.people.living.in.extreme.poverty <- gsub(",", "", povertybar$Total.number.of.people.living.in.extreme.poverty)
+      povertybar$Total.number.of.people.living.in.extreme.poverty <- as.numeric(povertybar$Total.number.of.people.living.in.extreme.poverty)
+  
+      Bargraph <- ggplot(povertybar, aes(x = region, y = Total.number.of.people.living.in.extreme.poverty, fill = region, text = paste("Population:", Total.number.of.people.living.in.extreme.poverty, "M"))) +
+        geom_bar(stat = "identity") +
+        scale_fill_discrete(name = "Region") + 
+        labs(title = "Poverty Comparison among Regions",
+             y = "Population (M)", x = "Country") +
+        theme_minimal() +
+        theme(plot.title = element_text(size = 18, face = "bold", hjust = 0.5))+
+        scale_y_continuous(labels = scales::comma)
+      
+      ggplotly(Bargraph, tooltip = "text")
+    }
+  })
+}
+shinyApp(ui, server)
+```
+
+<br>
+
+### Redesign Visualization : Line Graph
+
+<br>
+
+Import the appropriate libraries
+
+```{r message=FALSE}
+library(shiny)
+library(plotly)
+```
+
+<br>
+
+Clean the data set by removing the parenthesis from the country column and rename the column for easier usage of attribute names (optional).
+
+```{r message=FALSE}
+poverty = read.csv("Poverty.csv")
+
+poverty_year = read.csv("C:/Users/darsh/Desktop/STAT 515/Mid Project/Population in poverty.csv")
+
+poverty_year$Entity <- gsub("\\(.*?\\)", "", poverty_year$Entity)
+
+poverty_year <- poverty_year %>% rename(Country = Entity)
+
+poverty_year <- poverty_year %>% rename(Poverty.Percentage = X.2.15.a.day...Share.of.population.in.poverty)
+
+```
+
+<br>
+
+Using Shiny, UI is developed and server renders the output according to the input value and entire UI is rendered. Line chart is displayed showing the details of the poverty percentage over the period of time.
+
+```{r results='hide'}
+ui <- fluidPage(
+  titlePanel("Country Poverty Percentage Over Years"),
+  selectizeInput("countryInput", "Select Country(s):",
+                 choices = unique(poverty_year$Country),
+                 multiple = TRUE, selected = unique(poverty_year$Country)[1]),
+  plotlyOutput("povertyPlot")
+)
+
+server <- function(input, output) {
+  selected_country <- reactive({
+    if (length(input$countryInput) == 0) {
+      unique(poverty_year$Country)[1]
+    } else {
+      input$countryInput
+    }
+  })
+  
+  output$povertyPlot <- renderPlotly({
+    filtered_data <- poverty_year[poverty_year$Country %in% selected_country(), ]
+    
+    p <- ggplot(filtered_data, aes(x = Year, y = Poverty.Percentage, color = Country)) +
+      geom_line() +
+      geom_point(aes(text = paste("Year:", Year, "<br>Population in Poverty (%):", Poverty.Percentage))) +
+      theme_minimal() +
+      labs(title = paste("Poverty Percentage Over Years"),
+           y = "Poverty Percentage", x = "Year")
+    
+    ggplotly(p, tooltip = "text")
+  })
+}
+shinyApp(ui, server)
+```
+
+Note : Since Shiny is not supported in this static page the output is not displayed hence check the video link on the projects page for the full interactive UI demo
