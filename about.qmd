@@ -9,6 +9,9 @@ about:
     - icon: youtube
       text: Youtube
       href: https://youtu.be/DPY-rE35pXY
+    - icon: github
+      text: Github
+      href: https://github.com/Darshini-Balakrishnan/Website
 ---
 
 ![](image1.png){fig-align="center" width="210"}

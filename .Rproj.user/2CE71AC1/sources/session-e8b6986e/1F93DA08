@@ -1,14 +1,14 @@
 {
-    "id": "2A79176E",
-    "path": "C:/Users/darsh/Desktop/Website/projectpage.qmd",
-    "project_path": "projectpage.qmd",
+    "id": "1F93DA08",
+    "path": "C:/Users/darsh/Desktop/Website/about.qmd",
+    "project_path": "about.qmd",
     "type": "quarto_markdown",
     "hash": "0",
     "contents": "",
     "dirty": false,
-    "created": 1708035442846.0,
+    "created": 1710166164067.0,
     "source_on_save": false,
-    "relative_order": 3,
+    "relative_order": 2,
     "properties": {
         "rmdVisualMode": "true",
         "rmdVisualWrapConfigured": "true",
@@ -16,16 +16,16 @@
         "Source": "Source",
         "docOutlineVisible": "1",
         "rmdVisualCollapsedChunks": "",
-        "rmdVisualModeLocation": "5420:3605",
-        "cursorPosition": "92,0",
-        "scrollLine": "5"
+        "rmdVisualModeLocation": "353:0",
+        "cursorPosition": "0,0",
+        "scrollLine": "0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1710123959,
+    "lastKnownWriteTime": 1710165909,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1710123959428,
+    "last_content_update": 1710165909,
     "read_only": false,
     "read_only_alternatives": []
 }

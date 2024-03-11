@@ -7,7 +7,7 @@ format: html
 
 ### Redesign Visualizations of an Poverty Bad graph
 
-This is a project of redesigning a original graph which had flaws. I have made three different visualizations from the data which i have gathered from the original graph and supporting dataset to improve the visualization by making the graphs more informative.
+This is a project of redesigning a original graph which had flaws. I have made three different visualizations from the data which i have gathered from the original graph and supporting data set to improve the visualization by making the graphs more informative.
 
 <br>
 
@@ -52,7 +52,12 @@ map1 <- ggplot(mapdata, aes(x = long, y = lat, group = group, text = paste(regio
   scale_fill_gradient(low = "green", high = "red", name = "Poverty %") +
   labs(title = "Poverty Percentage by Region") +
   theme_minimal()+
-  theme(plot.title = element_text(hjust = 0.5))
+  theme(plot.title = element_text(hjust = 0.5),axis.ticks.x=element_blank(),
+        axis.title.y=element_blank(), 
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.title.x=element_blank(), 
+        axis.text.x=element_blank())
 
 map1_plotly <- ggplotly(map1, tooltip = "text")
 
