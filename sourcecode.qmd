@@ -156,7 +156,7 @@ Clean the data set by removing the parenthesis from the country column and renam
 ```{r message=FALSE}
 poverty = read.csv("Poverty.csv")
 
-poverty_year = read.csv("C:/Users/darsh/Desktop/STAT 515/Mid Project/Population in poverty.csv")
+poverty_year = read.csv("C:/Users/darsh/Desktop/Website/Population in poverty.csv")
 
 poverty_year$Entity <- gsub("\\(.*?\\)", "", poverty_year$Entity)
 

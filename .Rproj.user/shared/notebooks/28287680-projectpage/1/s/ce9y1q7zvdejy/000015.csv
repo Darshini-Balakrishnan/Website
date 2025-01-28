@@ -1,0 +1,10 @@
+"0","poverty = read.csv(""Poverty.csv"")"
+"0",""
+"0","poverty_year = read.csv(""C:/Users/darsh/Desktop/Website/Population in poverty.csv"")"
+"0",""
+"0","poverty_year$Entity <- gsub(""\\(.*?\\)"", """", poverty_year$Entity)"
+"0",""
+"0","poverty_year <- poverty_year %>% rename(Country = Entity)"
+"2","Error in poverty_year %>% rename(Country = Entity) : 
+  could not find function ""%>%""
+"
