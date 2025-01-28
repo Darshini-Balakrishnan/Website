@@ -3,8 +3,6 @@ editor: visual
 format: html
 ---
 
-### Group 9
-
 ### Redesign Visualizations of an Poverty Bad graph
 
 This is a project of redesigning a original graph which had flaws. I have made three different visualizations from the data which i have gathered from the original graph and supporting data set to improve the visualization by making the graphs more informative.
@@ -30,11 +28,11 @@ This is a visualization of a graph representing Extreme Poverty Rate of various 
 ```{r, message=FALSE, echo=FALSE}
 library(tidyverse)
 library(plotly)
+source("C:/Users/darsh/Desktop/Website/hw.R")
 ```
 
 ```{r echo=FALSE}
 poverty = read.csv("Poverty.csv")
-
 poverty$X..of.population <- gsub(",", ".", poverty$X..of.population)
 
 mapdata <- map_data("world") %>% as_tibble()
@@ -110,29 +108,12 @@ CountryValue <- c("Australia", "Albania")
 poverty_filtered <- poverty_year[poverty_year$Country %in% CountryValue,]
 library(plotly)
 
-p <- ggplot(poverty_filtered, aes(x = Year, y = Poverty.Percentage, color = Country)) +
-      geom_line() +
-      geom_point() +
-      theme_minimal() +
-      labs(title = paste("Poverty Percentage Over Years"),
-           y = "Poverty Percentage", x = "Year")+
-    theme(plot.title = element_text(hjust = 0.5))
-    
-    ggplotly(p)
-
+#
 ```
 
 <br>
 
 The Line chart displays the change in poverty percentage over a period of time, where the original graph does not contain the data over the years. This will be useful for the users to compare the change in poverty percentage over a period of time between multiple countries and a particular country's information can also be retrieved according to the choice made. The points on the line give's information of the year and the poverty rate at that particular time periods. The time period data was collected from the "Our world data in data" to make the visualization more informative.
-
-<br>
-
-This is an video explanation of the entire project and the redesigns
-
-{{< video https://www.youtube.com/embed/DPY-rE35pXY >}}
-
-<br>
 
 <br>
 

@@ -1,9 +1,10 @@
 ---
 editor: visual
-format: html
+format: 
+  html:
+    code-fold: true
+    code-summary: "Show the code"
 ---
-
-### Group 9
 
 ### Redesign Visualization : Map and Bar Graph
 
